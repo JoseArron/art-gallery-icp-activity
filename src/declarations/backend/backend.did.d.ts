@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
@@ -10,6 +9,8 @@ export interface Comment {
 }
 export interface _SERVICE {
   'createComment' : ActorMethod<[string, string], Array<Comment>>,
+  'deleteComment' : ActorMethod<[bigint], Array<Comment>>,
+  'editComment' : ActorMethod<[bigint, string], Array<Comment>>,
   'getAllComments' : ActorMethod<[], Array<Comment>>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;

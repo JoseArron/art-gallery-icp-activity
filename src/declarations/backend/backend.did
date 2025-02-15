@@ -6,5 +6,7 @@ type Comment =
  };
 service : {
   createComment: (text, text) -> (vec Comment);
+  deleteComment: (int) -> (vec Comment);
+  editComment: (int, text) -> (vec Comment);
   getAllComments: () -> (vec Comment) query;
 }
