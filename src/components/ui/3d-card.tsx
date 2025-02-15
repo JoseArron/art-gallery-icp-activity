@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
@@ -52,7 +53,7 @@ export const CardContainer = ({
       <div
         className={cn(
           "p-2 h-full flex items-center justify-center",
-          containerClassName
+          containerClassName,
         )}
         style={{
           perspective: "5000px",
@@ -65,7 +66,7 @@ export const CardContainer = ({
           onMouseLeave={handleMouseLeave}
           className={cn(
             "flex items-center justify-center relative transition-all duration-200 ease-linear",
-            className
+            className,
           )}
           style={{
             transformStyle: "preserve-3d",
@@ -90,7 +91,7 @@ export const CardBody = ({
       id="certificate-card"
       className={cn(
         "[transform-style:preserve-3d]  [&>*]:[transform-style:preserve-3d]",
-        className
+        className,
       )}
     >
       {children}

@@ -1,5 +1,5 @@
-const name = "yourName";
-const artIs: ArtIs = ["Something1", "Something2"]; // words to decribe what art is
+const name = "Jose";
+const artIs: ArtIs = ["free", "limitless"]; // words to decribe what art is
 const artworks: Artwork[] = [
   {
     imageUrl: "/images/burg1.jpg", // image path and image name in /public
@@ -8,4 +8,4 @@ const artworks: Artwork[] = [
   },
 ];
 
-export {name, artIs, artworks}
+export { name, artIs, artworks };

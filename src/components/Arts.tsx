@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useContext, useMemo } from "react";
 import { CardBody, CardContainer } from "./ui/3d-card";
 import {
   Dialog,
@@ -14,35 +14,26 @@ import { Input } from "./ui/input";
 import { Button } from "@/components/ui/button";
 import { backend } from "@/declarations/backend";
 import { Comment } from "@/lib/interface";
+import { CommentsContext } from "@/contexts/CommentsContext";
+import CommentItem from "./CommentItem";
 
 interface ArtsProps {
   imageUrl: string;
   title: string;
   description: string;
-  initialComments: Comment[];
 }
 
-export default function Arts({
-  imageUrl,
-  title,
-  description,
-  initialComments,
-}: ArtsProps) {
+export default function Arts({ imageUrl, title, description }: ArtsProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [comments, setComments] = useState<Comment[]>([...initialComments].sort((a, b) => {
-    return Number(a.timestamp) - Number(b.timestamp);
-  }));
+  const { comments, setComments } = useContext(CommentsContext);
   const [newComment, setNewComment] = useState("");
   const [isPosting, setIsPosting] = useState(false);
 
-  useEffect(() => {
-    if (initialComments) {
-      const sortedInitialComments = [...initialComments].sort((a, b) => {
-        return Number(a.timestamp) - Number(b.timestamp);
-      });
-      setComments(sortedInitialComments)
-    }
-  }, [initialComments])
+  const sortedComments = useMemo(() => {
+    return [...comments].sort(
+      (a, b) => Number(a.timestamp) - Number(b.timestamp),
+    );
+  }, [comments]);
 
   const handleAddComment = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -51,12 +42,14 @@ export default function Arts({
       try {
         const updatedComments: Comment[] = await backend.createComment(
           imageUrl,
-          newComment
+          newComment,
         );
         const sortedComments = [...updatedComments].sort((a, b) => {
           return Number(a.timestamp) - Number(b.timestamp);
         });
-        const artworkSortedComments = sortedComments ? sortedComments.filter(comment => comment.imageUrl === imageUrl) : []
+        const artworkSortedComments = sortedComments
+          ? sortedComments.filter((comment) => comment.imageUrl === imageUrl)
+          : [];
         setComments(artworkSortedComments);
         setNewComment("");
       } catch (error) {
@@ -85,7 +78,6 @@ export default function Arts({
             </div>
           </CardBody>
         </CardContainer>
-
         <DialogContent className="max-w-xl max-h-[95vh] overflow-y-scroll">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
@@ -104,13 +96,8 @@ export default function Arts({
             <h4 className="text-lg font-semibold">Comments</h4>
             <div className="max-h-72 overflow-y-auto border rounded-md px-2 py-1">
               {comments.length > 0 ? (
-                comments.map((comment, index) => (
-                  <p
-                    key={index}
-                    className="text-sm text-gray-700 border-b py-1 last:border-none"
-                  >
-                    <span className="font-bold">Anonymous: </span> {comment.text}
-                  </p>
+                sortedComments.map((comment, index) => (
+                  <CommentItem key={index} data={comment} />
                 ))
               ) : (
                 <p className="text-sm text-gray-500">No comments yet.</p>
@@ -125,7 +112,8 @@ export default function Arts({
                 className="flex-1"
               />
               <Button type="submit" className="self-end" disabled={isPosting}>
-                {isPosting ? "Posting..." : "Post"} {/* Display loading text or normal text */}
+                {isPosting ? "Posting..." : "Post"}{" "}
+                {/* Display loading text or normal text */}
               </Button>
             </form>
           </div>
